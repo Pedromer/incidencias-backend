@@ -31,7 +31,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         // Castear a subclase (Cliente o Tecnico)
-        $instancia = $user->toSubclass();
+        $instancia = $user->toSubClass();
 
         return response()->json([
             'token' => $token,
@@ -51,7 +51,7 @@ class AuthController extends Controller
      */
     public function user(Request $request)
     {
-        $instancia = $request->user()->toSubclass();
+        $instancia = $request->user()->toSubClass();
 
         return response()->json([
             'id'     => $instancia->id,
