@@ -10,7 +10,7 @@ class Incidencia extends Model
     protected $table = 'incidencias';
 
     protected $fillable = [
-        'usuario_id',
+        'cliente_id',
         'tecnico_id',
         'categoria_id',
         'titulo',
@@ -25,10 +25,10 @@ class Incidencia extends Model
         'fecha_finalizacion' => 'datetime',
     ];
 
-    // Relaciones según el UML
+    // Relaciones
     public function cliente()
     {
-        return $this->belongsTo(Cliente::class, 'usuario_id');
+        return $this->belongsTo(Cliente::class, 'cliente_id');
     }
 
     public function tecnico()
@@ -46,7 +46,7 @@ class Incidencia extends Model
         return $this->hasMany(Comentario::class, 'incidencia_id');
     }
 
-    // Métodos de comportamiento del UML
+    // Métodos
     public function asignarTecnico(Tecnico $tecnico): void
     {
         $this->tecnico_id = $tecnico->id;

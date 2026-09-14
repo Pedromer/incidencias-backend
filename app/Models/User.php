@@ -17,6 +17,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'tipo',
     ];
 
     protected $hidden = [
@@ -24,7 +25,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    // esto es para
+    // esto es para 
     protected function casts(): array
     {
         return [
@@ -49,7 +50,7 @@ class User extends Authenticatable
     }
 
     // metodo para obtener la clase hija (cliente o tecnico) segun el tipo
-    public function claseHija(): Cliente|Tecnico
+    public function toSubClass(): Cliente|Tecnico
     {
     return match ($this->tipo) {
         'tecnico' => Tecnico::withoutGlobalScopes()->findOrFail($this->id),

@@ -2,32 +2,30 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\Cliente;
+use App\Models\Tecnico;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
-class DatabaseSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // cargar las 5 categorías
-        $this->call(CategoriaSeeder::class);
 
-        // cliente
         Cliente::firstOrCreate(
             ['email' => 'cliente@test.com'],
             [
-            'name'     => 'Maria cliente',
-            'password' => Hash::make('123'),
+                'name'     => 'Maria cliente',
+                'password' => '123',
+                'tipo'     => 'cliente',
             ]
         );
 
-        // tecnico
         Tecnico::firstOrCreate(
             ['email' => 'tecnico@test.com'],
             [
-            'name'     => 'Juan mecanico',
-            'password' => Hash::make('123'),
+                'name'     => 'Juan mecanico',
+                'password' => '123',
+                'tipo'     => 'tecnico',
             ]
         );
     }

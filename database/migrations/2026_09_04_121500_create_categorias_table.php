@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('categorias', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // aca esta el id y no en el modelo ya que es autoincremental
             $table->string('nombre');
             $table->text('descripcion')->nullable();
             $table->timestamps();
