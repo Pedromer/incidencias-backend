@@ -1,3 +1,103 @@
+# Backend - Sistema de Gestion de Incidencias Tecnicas
+
+API REST del sistema de mesa tecnica para la ESET-UNQ. El backend esta desarrollado con Laravel, Sanctum y MariaDB. El frontend se ejecuta en un repositorio independiente y se comunica exclusivamente mediante HTTP y JSON.
+
+## Tecnologias
+
+- PHP 8.2 o superior
+- Laravel 12
+- Laravel Sanctum
+- MariaDB/MySQL
+- Composer
+
+## Instalacion local
+
+Clonar la rama de trabajo:
+
+```bash
+git clone -b main-2 https://github.com/Pedromer/incidencias-backend.git
+cd incidencias-backend
+composer install
+cp .env.example .env
+php artisan key:generate
+```
+
+Crear la base de datos en MariaDB:
+
+```sql
+CREATE DATABASE incidencias CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+Configurar `.env` con los datos locales:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=incidencias
+DB_USERNAME=root
+DB_PASSWORD=la_contrasena_local
+CORS_ALLOWED_ORIGINS=http://localhost:5500,http://127.0.0.1:5500
+```
+
+El usuario de MariaDB debe tener permisos sobre la base `incidencias`. Luego ejecutar:
+
+```bash
+php artisan config:clear
+php artisan migrate:fresh --seed
+```
+
+Los seeders crean las categorias obligatorias y los usuarios de prueba. No es necesario crear seeders manualmente.
+
+## Ejecucion
+
+```bash
+php artisan serve --host=127.0.0.1 --port=8000
+```
+
+La API queda disponible en `http://127.0.0.1:8000/api`.
+
+## Usuarios de prueba
+
+```text
+Cliente: cliente@test.com / 123
+Tecnico: tecnico@test.com / 123
+```
+
+## Endpoints principales
+
+```text
+POST /api/login
+POST /api/logout
+GET  /api/user
+GET  /api/categorias
+GET  /api/incidencias
+POST /api/incidencias
+GET  /api/incidencias/{id}
+PUT  /api/incidencias/{id}/tomar
+PUT  /api/incidencias/{id}/resolver
+GET  /api/incidencias/{id}/comentarios
+POST /api/incidencias/{id}/comentarios
+```
+
+Las rutas protegidas requieren el encabezado `Authorization: Bearer TOKEN`. Los roles se identifican con el campo `tipo`, cuyos valores son `cliente` y `tecnico`.
+
+## Reglas implementadas
+
+- El cliente solo puede ver sus propias incidencias.
+- El tecnico puede ver todas las incidencias.
+- Solo un tecnico puede tomar una incidencia `abierto`.
+- Al tomarla pasa a `en_curso`.
+- Solo el tecnico asignado puede resolverla.
+- Para resolverla se requiere una descripcion en `resolucion`.
+- Al resolverla pasa a `finalizado`.
+- Los errores y validaciones se devuelven en JSON.
+
+## Despliegue
+
+En el servidor de despliegue se necesitan PHP, Composer, MariaDB y un servidor web. Configurar las variables de `.env`, ejecutar `composer install --no-dev`, generar `APP_KEY`, correr `php artisan migrate --seed` y configurar el servidor web para apuntar al directorio `public/`.
+
+El frontend debe publicarse por separado. Agregar su dominio a `CORS_ALLOWED_ORIGINS` y limpiar la configuracion con `php artisan config:clear` después de modificar `.env`.
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
