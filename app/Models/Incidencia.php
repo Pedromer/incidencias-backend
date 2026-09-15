@@ -10,7 +10,7 @@ class Incidencia extends Model
     protected $table = 'incidencias';
 
     protected $fillable = [
-        'cliente_id',
+        'usuario_id',
         'tecnico_id',
         'categoria_id',
         'titulo',
@@ -28,7 +28,7 @@ class Incidencia extends Model
     // Relaciones
     public function cliente()
     {
-        return $this->belongsTo(Cliente::class, 'cliente_id');
+        return $this->belongsTo(Cliente::class, 'usuario_id');
     }
 
     public function tecnico()
