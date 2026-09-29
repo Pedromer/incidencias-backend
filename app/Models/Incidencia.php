@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Estado;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Incidencia extends Model
 {
@@ -26,6 +27,11 @@ class Incidencia extends Model
     ];
 
     // Relaciones
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function cliente()
     {
         return $this->belongsTo(Cliente::class, 'cliente_id');

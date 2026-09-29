@@ -10,6 +10,7 @@ class Tecnico extends User
 {
     protected $table = 'users';
 
+    // sirve pal tipo de "Tecnico"
     protected static function booted(): void
     {
         // filtrar consultas para obtener solo registros de tipo 'tecnico'

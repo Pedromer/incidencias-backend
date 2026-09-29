@@ -29,7 +29,7 @@ class Cliente extends User
         return $this->hasMany(Incidencia::class, 'usuario_id');
     }
 
-    // Método del UML: + agregarIncidencia(titulo, descripcion, categoria) : Incidencia
+    // agregarIncidencia(titulo, descripcion, categoria) : Incidencia
     public function agregarIncidencia(string $titulo, string $descripcion, int $categoriaId): Incidencia
     {
         return Incidencia::create([
@@ -40,13 +40,13 @@ class Cliente extends User
         ]);
     }
 
-    // Método del UML: + consultarMisIncidencias() : List<Incidencia>
+    // consultarMisIncidencias() : List<Incidencia>
     public function consultarMisIncidencias(): Collection
     {
         return $this->incidencias()->with(['categoria', 'tecnico'])->get();
     }
 
-    // Método del UML: + borrarMiIncidencia(idIncidencia) : int
+    // borrarMiIncidencia(idIncidencia) : int
     public function borrarMiIncidencia(int $idIncidencia): int
     {
         return Incidencia::where('id', $idIncidencia)

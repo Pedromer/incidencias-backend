@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('incidencias', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('usuario_id')->constrained('users')->cascadeOnDelete();
+        $table->foreignId('cliente_id')->constrained('users')->cascadeOnDelete();
         $table->foreignId('tecnico_id')->nullable()->constrained('users')->nullOnDelete();
         $table->foreignId('categoria_id')->constrained('categorias')->cascadeOnDelete();
         $table->string('titulo');
