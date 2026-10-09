@@ -29,7 +29,7 @@ class Incidencia extends Model
     // Relaciones
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'cliente_id');
     }
 
     public function cliente()

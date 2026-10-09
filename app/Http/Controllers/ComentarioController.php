@@ -11,10 +11,10 @@ use Illuminate\Http\Request;
 
 class ComentarioController extends Controller
 {
-    /**
-     * Listar los comentarios de una incidencia en orden cronológico.
-     * GET /api/incidencias/{incidencia}/comentarios
-     */
+    
+     //Listar los comentarios de una incidencia en orden cronológico.
+     //GET /api/incidencias/{incidencia}/comentarios
+    
     public function index(int $incidenciaId): JsonResponse
     {
         $incidencia = Incidencia::findOrFail($incidenciaId);
@@ -27,10 +27,10 @@ class ComentarioController extends Controller
         return response()->json($comentarios, 200);
     }
 
-    /**
-     * Crear un nuevo comentario para una incidencia.
-     * POST /api/incidencias/{incidencia}/comentarios
-     */
+    
+     //Crear un nuevo comentario para una incidencia.
+     //POST /api/incidencias/{incidencia}/comentarios
+     
     public function store(Request $request, int $incidenciaId): JsonResponse
     {
         $incidencia = Incidencia::findOrFail($incidenciaId);
@@ -48,5 +48,11 @@ class ComentarioController extends Controller
             'message'    => 'Comentario registrado con éxito.',
             'comentario' => $comentario->load('user:id,name,tipo'),
         ], 201);
+
+        /*body en json para postman:
+        {
+            "contenido": "Este es un comentario de prueba."
+        }
+        */
     }
 }

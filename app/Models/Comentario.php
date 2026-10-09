@@ -15,7 +15,7 @@ class Comentario extends Model
     ];
 
     // Usuario "1" o Tecnico "1" --> "0..*" Comentario : realiza
-    public function autor()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }

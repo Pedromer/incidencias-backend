@@ -17,8 +17,8 @@ class IncidenciaController extends Controller
 
     public function index() // listado de incidencias con sus relaciones
     {
-        $incidencias = Incidencia::with('categoria:id,nombre', 'user:id,name,tipo')
-            ->get(['id', 'titulo', 'descripcion', 'categoria_id', 'user_id', 'created_at']);
+        $incidencias = Incidencia::with('categoria:id,nombre', 'cliente:id,name,tipo', 'tecnico:id,name,tipo')
+            ->get(['id', 'titulo', 'descripcion', 'categoria_id', 'cliente_id', 'tecnico_id', 'created_at']);
 
         return response()->json($incidencias, 200);
     }
@@ -38,13 +38,22 @@ class IncidenciaController extends Controller
             'titulo'       => $validated['titulo'],
             'descripcion'  => $validated['descripcion'],
             'categoria_id' => $validated['categoria_id'],
-            'user_id'      => $request->user()->id,
+            'cliente_id'      => $request->user()->id,
         ]);
 
         return response()->json([
             'message'    => 'Incidencia creada con éxito.',
-            'incidencia' => $incidencia->load('categoria:id,nombre', 'user:id,name,tipo'),
+            'incidencia' => $incidencia->load('categoria:id,nombre', 'cliente:id,name,tipo', 'tecnico:id,name,tipo'),
         ], 201);
+
+        /*
+        body en json para postman:
+        {
+            "titulo": "Problema con la red",
+            "descripcion": "No puedo conectarme a internet.",
+            "categoria_id": 1
+        }
+        */
     }
 
     /**
