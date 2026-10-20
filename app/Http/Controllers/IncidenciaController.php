@@ -15,14 +15,44 @@ class IncidenciaController extends Controller
     //obtiene el detalle de una incidencia
     // GET /api/incidencias/{id}
 
-    public function index() // listado de incidencias con sus relaciones
+    public function index(Request $request): JsonResponse
     {
-        $incidencias = Incidencia::with('categoria:id,nombre', 'cliente:id,name,tipo', 'tecnico:id,name,tipo')
-            ->get(['id', 'titulo', 'descripcion', 'categoria_id', 'cliente_id', 'tecnico_id', 'created_at']);
+        $user = $request->user();
+
+        // Eager loading para evitar N+1
+        $query = Incidencia::with(['categoria', 'cliente', 'tecnico']);
+
+        // Regla de negocio: Si es cliente, solo ve sus incidencias
+        if ($user->tipo === 'cliente') {
+            $query->where('cliente_id', $user->id);
+        }
+
+        // Filtro por estado
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->query('estado'));
+        }
+
+        // Filtro por categoría
+        if ($request->filled('categoria_id')) {
+            $query->where('categoria_id', $request->query('categoria_id'));
+        }
+
+        // Filtros exclusivos de técnicos
+        if ($user->tipo === 'tecnico') {
+            if ($request->filled('tecnico_id')) {
+                $query->where('tecnico_id', $request->query('tecnico_id'));
+            }
+
+            if ($request->boolean('sin_asignar')) {
+                $query->whereNull('tecnico_id');
+            }
+        }
+
+        $incidencias = $query->latest()->get();
 
         return response()->json($incidencias, 200);
     }
-
+    
     /**
      * Store a newly created resource in storage.
      */

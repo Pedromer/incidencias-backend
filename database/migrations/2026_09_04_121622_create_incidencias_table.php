@@ -19,7 +19,7 @@ return new class extends Migration
         $table->foreignId('categoria_id')->constrained('categorias')->cascadeOnDelete();
         $table->string('titulo');
         $table->text('descripcion');
-        $table->string('estado')->default('abierto');
+        $table->string('estado')->default('abierta');
         $table->text('resolucion')->nullable();
         $table->dateTime('fecha_finalizacion')->nullable();
         $table->timestamps();
