@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Estado;
 use App\Models\Incidencia;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -68,7 +69,8 @@ class IncidenciaController extends Controller
             'titulo'       => $validated['titulo'],
             'descripcion'  => $validated['descripcion'],
             'categoria_id' => $validated['categoria_id'],
-            'cliente_id'      => $request->user()->id,
+            'cliente_id'   => $request->user()->id,
+            'estado'       => Estado::ABIERTA,
         ]);
 
         return response()->json([
