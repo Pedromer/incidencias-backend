@@ -86,12 +86,17 @@ Las rutas protegidas requieren el encabezado `Authorization: Bearer TOKEN`. Los 
 
 - El cliente solo puede ver sus propias incidencias.
 - El tecnico puede ver todas las incidencias.
-- Solo un tecnico puede tomar una incidencia `abierto`.
+- Solo un tecnico puede tomar una incidencia `abierta` sin asignar.
 - Al tomarla pasa a `en_curso`.
 - Solo el tecnico asignado puede resolverla.
 - Para resolverla se requiere una descripcion en `resolucion`.
 - Al resolverla pasa a `finalizado`.
 - Los errores y validaciones se devuelven en JSON.
+
+Para tomar una incidencia se usa `PUT /api/incidencias/{id}/tomar`. Para registrar
+su resolución se usa `PUT /api/incidencias/{id}/resolver` con un cuerpo JSON como
+`{"resolucion":"Se restableció el servicio."}`. Ambas acciones requieren un token
+de un usuario de tipo `tecnico`.
 
 ## Despliegue
 
@@ -157,3 +162,7 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Integrantes
+
+Pedro Iglesias - Benjamin Gonzales - Noel Rosa

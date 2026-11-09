@@ -14,10 +14,16 @@ class ComentarioController extends Controller
     
      //Listar los comentarios de una incidencia en orden cronológico.
      //GET /api/incidencias/{incidencia}/comentarios
-    
-    public function index(int $incidenciaId): JsonResponse
+    public function index(Request $request, int $incidenciaId): JsonResponse
     {
         $incidencia = Incidencia::findOrFail($incidenciaId);
+
+        if (
+            $request->user()->tipo === 'cliente'
+            && $incidencia->cliente_id !== $request->user()->id
+        ) {
+            abort(404);
+        }
 
         $comentarios = $incidencia->comentarios()
             ->with('user:id,name,tipo')
@@ -35,24 +41,25 @@ class ComentarioController extends Controller
     {
         $incidencia = Incidencia::findOrFail($incidenciaId);
 
+        if (
+            $request->user()->tipo === 'cliente'
+            && $incidencia->cliente_id !== $request->user()->id
+        ) {
+            abort(404);
+        }
+
         $validated = $request->validate([
             'contenido' => 'required|string',
         ]);
 
         $comentario = $incidencia->comentarios()->create([
-            'contenido'  => $validated['contenido'],
-            'user_id'    => $request->user()->id,
+            'contenido' => $validated['contenido'],
+            'user_id' => $request->user()->id,
         ]);
 
         return response()->json([
-            'message'    => 'Comentario registrado con éxito.',
+            'message' => 'Comentario registrado con éxito.',
             'comentario' => $comentario->load('user:id,name,tipo'),
         ], 201);
-
-        /*body en json para postman:
-        {
-            "contenido": "Este es un comentario de prueba."
-        }
-        */
     }
 }

@@ -59,6 +59,11 @@ class IncidenciaController extends Controller
      */
     public function store(Request $request) // para crear una nueva incidencia
     {
+        abort_unless(
+            $request->user()->tipo === 'cliente',
+            403,
+            'Solo un cliente puede crear incidencias.'
+        );
         $validated = $request->validate([
             'titulo'       => 'required|string|max:255',
             'descripcion'  => 'required|string',
@@ -91,9 +96,19 @@ class IncidenciaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Incidencia $incidencia)  
+    public function show(Request $request, Incidencia $incidencia): JsonResponse
     {
-        $incidencia->load('categoria:id,nombre', 'user:id,name,tipo', 'comentarios.user:id,name,tipo');
+    if ($request->user()->tipo === 'cliente'
+        && $incidencia->cliente_id !== $request->user()->id) {
+        abort(404);
+    }
+        $incidencia->load(
+            'categoria:id,nombre',
+            'user:id,name,tipo',
+            'cliente:id,name,tipo',
+            'tecnico:id,name,tipo',
+            'comentarios.user:id,name,tipo'
+        );
 
         return response()->json($incidencia, 200);
     }
@@ -101,21 +116,30 @@ class IncidenciaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Incidencia $incidencia)
-    {
-        $validated = $request->validate([
-            'titulo'       => 'sometimes|required|string|max:255',
-            'descripcion'  => 'sometimes|required|string',
-            'categoria_id' => 'sometimes|required|exists:categorias,id',
-        ]);
+public function update(Request $request, Incidencia $incidencia): JsonResponse
+{
+    $usuario = $request->user();
 
-        $incidencia->update($validated);
-
-        return response()->json([
-            'message'    => 'Incidencia actualizada con éxito.',
-            'incidencia' => $incidencia->load('categoria:id,nombre', 'user:id,name,tipo'),
-        ], 200);
+    if (
+        $usuario->tipo !== 'cliente'
+        || $incidencia->cliente_id !== $usuario->id
+    ) {
+        abort(404);
     }
+
+    $validated = $request->validate([
+        'titulo'       => 'sometimes|required|string|max:255',
+        'descripcion'  => 'sometimes|required|string',
+        'categoria_id' => 'sometimes|required|exists:categorias,id',
+    ]);
+
+    $incidencia->update($validated);
+
+    return response()->json([
+        'message'    => 'Incidencia actualizada con éxito.',
+        'incidencia' => $incidencia->load('categoria:id,nombre', 'user:id,name,tipo'),
+    ], 200);
+}
 
     /**
      * Remove the specified resource from storage.
