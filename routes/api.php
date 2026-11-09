@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\IncidenciaController;
+use App\Http\Controllers\TecnicoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,12 +19,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
 
     //incidencias
-    Route::get('/incidencias', [\App\Http\Controllers\IncidenciaController::class, 'index']); // mostrar todas las incidencias del usuario 
+    Route::get('/incidencias', [IncidenciaController::class, 'index']); // mostrar todas las incidencias del usuario
     // 1. Metodo: get, 2. URL: /api/incidencias, 3. Controlador: IncidenciaController, 4. Metodo del controlador: index
-    Route::get('/incidencias/{incidencia}', [\App\Http\Controllers\IncidenciaController::class, 'show']);
-    Route::post('/incidencias', [\App\Http\Controllers\IncidenciaController::class, 'store']);
-    Route::put('/incidencias/{incidencia}', [\App\Http\Controllers\IncidenciaController::class, 'update']);
+    Route::get('/incidencias/{incidencia}', [IncidenciaController::class, 'show']);
+    Route::post('/incidencias', [IncidenciaController::class, 'store']);
+    Route::put('/incidencias/{incidencia}', [IncidenciaController::class, 'update']);
 
+    // Operaciones específicas del técnico
+    Route::put('/incidencias/{incidencia}/tomar', [TecnicoController::class, 'tomar']);
+    Route::put('/incidencias/{incidencia}/resolver', [TecnicoController::class, 'resolver']);
 
 
     //categorias
