@@ -10,7 +10,7 @@ class Incidencia extends Model
 {
     protected $table = 'incidencias';
 
-    protected $fillable = [
+    protected $fillable = [ ## Campos que se pueden asignar masivamente
         'cliente_id',
         'tecnico_id',
         'categoria_id',
@@ -21,9 +21,9 @@ class Incidencia extends Model
         'fecha_finalizacion',
     ];
 
-    protected $casts = [
-        'estado' => Estado::class,
-        'fecha_finalizacion' => 'datetime',
+    protected $casts = [ ## Convierte automáticamente los tipos de datos cuando entran o salen de la base de datos
+        'estado' => Estado::class, ## Convierte automáticamente el valor del campo 'estado' a la enumeración Estado
+        'fecha_finalizacion' => 'datetime', ## idem
     ];
 
     // Relaciones

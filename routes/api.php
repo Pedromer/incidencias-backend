@@ -29,7 +29,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/incidencias/{incidencia}/tomar', [TecnicoController::class, 'tomar']);
     Route::put('/incidencias/{incidencia}/resolver', [TecnicoController::class, 'resolver']);
 
-
     //categorias
     Route::get('/categorias', [CategoriaController::class, 'index']);
 
@@ -39,7 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //usuarios (por ahora no es necesario)
 
-    //para filtrar por estado, categoria o tecnico, se puede usar query params:
+    //para filtrar por estado, categoria o tecnico se usan query params:
     // /api/incidencias?estado=ABIERTA
     // /api/incidencias?categoria=REDES
     // /api/incidencias?tecnico_id=1

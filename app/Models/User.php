@@ -11,7 +11,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $table = 'users';
+    protected $table = 'users'; ## "protected" es para que no se pueda cambiar el nombre de la tabla desde fuera de la clase.
 
     protected $fillable = [
         'name',
@@ -20,12 +20,12 @@ class User extends Authenticatable
         'tipo',
     ];
 
-    protected $hidden = [
+    protected $hidden = [ ## datos ocultos en respuestas json
         'password',
         'remember_token',
     ];
 
-    // esto es para 
+    ## casteo de tipos de datos automatico
     protected function casts(): array
     {
         return [
@@ -49,7 +49,7 @@ class User extends Authenticatable
         return $this->hasMany(Comentario::class, 'user_id');
     }
 
-    // metodo para obtener la clase hija (cliente o tecnico) segun el tipo
+    ## metodo para obtener la clase hija (cliente o tecnico) segun el tipo
     public function toSubClass(): Cliente|Tecnico
     {
     return match ($this->tipo) {

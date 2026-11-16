@@ -17,6 +17,6 @@ class CategoriaController extends Controller
     {
         $categorias = Categoria::all(['id', 'nombre']);
 
-        return response()->json($categorias, 200);
+        return response()->json($categorias, 200); 
     }
 }

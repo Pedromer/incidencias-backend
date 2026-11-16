@@ -6,7 +6,7 @@ use App\Enums\Estado;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Builder;
 
-class Tecnico extends User
+class Tecnico extends User ## herencia
 {
     protected $table = 'users';
 
@@ -14,7 +14,7 @@ class Tecnico extends User
     protected static function booted(): void
     {
         // filtrar consultas para obtener solo registros de tipo 'tecnico'
-        static::addGlobalScope('tecnico', function (Builder $builder) {
+        static::addGlobalScope('tecnico', function (Builder $builder) { ## scope global para filtrar tecnicos
             $builder->where('tipo', 'tecnico');
         });
 
@@ -24,6 +24,7 @@ class Tecnico extends User
         });
     }
 
+    ## Relaciones
     // Tecnico "0..1" --> "0..*" Incidencia : atiende
     public function incidenciasAsignadas()
     {

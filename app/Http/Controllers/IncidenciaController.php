@@ -16,14 +16,14 @@ class IncidenciaController extends Controller
     //obtiene el detalle de una incidencia
     // GET /api/incidencias/{id}
 
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): JsonResponse ## obtiene la lista de incidencias con filtros y control de acceso
     {
-        $user = $request->user();
+        $user = $request->user(); ## obtiene el usuario autenticado
 
         // Eager loading para evitar N+1
         $query = Incidencia::with(['categoria', 'cliente', 'tecnico']);
 
-        // Regla de negocio: Si es cliente, solo ve sus incidencias
+        // SI ES CLIENTE, solo ve sus incidencias
         if ($user->tipo === 'cliente') {
             $query->where('cliente_id', $user->id);
         }
@@ -57,25 +57,25 @@ class IncidenciaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) // para crear una nueva incidencia
+    public function store(Request $request) // crea una nueva incidencia
     {
-        abort_unless(
+        abort_unless( ## control de acceso: solo un cliente puede crear incidencias
             $request->user()->tipo === 'cliente',
             403,
             'Solo un cliente puede crear incidencias.'
         );
-        $validated = $request->validate([
+        $validated = $request->validate([ ## validacion de datos de entrada
             'titulo'       => 'required|string|max:255',
             'descripcion'  => 'required|string',
             'categoria_id' => 'required|exists:categorias,id',
         ]);
 
-        $incidencia = Incidencia::create([
+        $incidencia = Incidencia::create([ ## creacion propiamente dicha
             'titulo'       => $validated['titulo'],
             'descripcion'  => $validated['descripcion'],
             'categoria_id' => $validated['categoria_id'],
-            'cliente_id'   => $request->user()->id,
-            'estado'       => Estado::ABIERTA,
+            'cliente_id'   => $request->user()->id, ##
+            'estado'       => Estado::ABIERTA, ## siempre se crea abierta
         ]);
 
         return response()->json([
@@ -95,10 +95,12 @@ class IncidenciaController extends Controller
 
     /**
      * Display the specified resource.
+     * muestra el recurso especifico (detalle de la incidencia id X)
+     * GET /api/incidencias/{id}
      */
     public function show(Request $request, Incidencia $incidencia): JsonResponse
     {
-    if ($request->user()->tipo === 'cliente'
+    if ($request->user()->tipo === 'cliente' ## control de acceso: verifica si el usuario es un cliente y si la incidencia pertenece a ese cliente
         && $incidencia->cliente_id !== $request->user()->id) {
         abort(404);
     }
@@ -115,6 +117,8 @@ class IncidenciaController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * PUT/PATCH /api/incidencias/{id}
+     * actualiza el recurso especifico
      */
 public function update(Request $request, Incidencia $incidencia): JsonResponse
 {
@@ -144,7 +148,7 @@ public function update(Request $request, Incidencia $incidencia): JsonResponse
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Incidencia $incidencia) // vacio ya que no quiero borrar incidencias
+    public function destroy(Incidencia $incidencia) ## por ahora no se implementa la eliminacion de incidencias
     {
         //
     }

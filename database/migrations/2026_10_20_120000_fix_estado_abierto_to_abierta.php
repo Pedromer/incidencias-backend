@@ -5,10 +5,7 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    /**
-     * Fix rows written with the old backing value 'abierto' before the
-     * Estado enum was corrected to use 'abierta'.
-     */
+    ## migration usada para fixear el cambio de estado de incidencias de "abierto" a "abierta" en la tabla incidencias
     public function up(): void
     {
         DB::table('incidencias')

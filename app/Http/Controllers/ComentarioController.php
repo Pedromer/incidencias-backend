@@ -16,9 +16,9 @@ class ComentarioController extends Controller
      //GET /api/incidencias/{incidencia}/comentarios
     public function index(Request $request, int $incidenciaId): JsonResponse
     {
-        $incidencia = Incidencia::findOrFail($incidenciaId);
+        $incidencia = Incidencia::findOrFail($incidenciaId); ## busca la incidencia por su ID ## si no existe devuelve error 
 
-        if (
+        if ( ## control de acceso: verifica si el usuario es un cliente y si la incidencia pertenece a ese cliente
             $request->user()->tipo === 'cliente'
             && $incidencia->cliente_id !== $request->user()->id
         ) {
@@ -30,34 +30,33 @@ class ComentarioController extends Controller
             ->oldest()
             ->get();
 
-        return response()->json($comentarios, 200);
+        return response()->json($comentarios, 200); ## respuesta en json
     }
 
-    
      //Crear un nuevo comentario para una incidencia.
      //POST /api/incidencias/{incidencia}/comentarios
      
-    public function store(Request $request, int $incidenciaId): JsonResponse
+    public function store(Request $request, int $incidenciaId): JsonResponse ## almacena un nuevo comentario para la incidencia
     {
         $incidencia = Incidencia::findOrFail($incidenciaId);
 
-        if (
+        if ( ## control de acceso: verifica si el usuario es un cliente y si la incidencia pertenece a ese cliente
             $request->user()->tipo === 'cliente'
             && $incidencia->cliente_id !== $request->user()->id
         ) {
             abort(404);
         }
 
-        $validated = $request->validate([
-            'contenido' => 'required|string',
+        $validated = $request->validate([ ## valida los datos de entrada
+            'contenido' => 'required|string', ##
         ]);
 
-        $comentario = $incidencia->comentarios()->create([
+        $comentario = $incidencia->comentarios()->create([ ## crea un nuevo comentario asociado a la incidencia
             'contenido' => $validated['contenido'],
             'user_id' => $request->user()->id,
         ]);
 
-        return response()->json([
+        return response()->json([ ## respuesta en json con el comentario creado
             'message' => 'Comentario registrado con éxito.',
             'comentario' => $comentario->load('user:id,name,tipo'),
         ], 201);

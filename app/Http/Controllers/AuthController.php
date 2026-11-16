@@ -14,14 +14,14 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $request->validate([
+        $request->validate([ ## validacion de datos de entrada
             'email'    => 'required|email',
             'password' => 'required|string',
         ]);
 
         $user = User::where('email', $request->email)->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) { ## verificacion de credenciales (o existencia del usuario)
             return response()->json([
                 'message' => 'Credenciales inválidas.',
             ], 401);
@@ -33,7 +33,7 @@ class AuthController extends Controller
         // Castear a subclase (Cliente o Tecnico)
         $instancia = $user->toSubclass();
 
-        return response()->json([
+        return response()->json([ ## respuesta en json de los datos del usuario y el token
             'token' => $token,
             'user'  => [
                 'id'     => $instancia->id,
@@ -53,7 +53,7 @@ class AuthController extends Controller
     {
         $instancia = $request->user()->toSubclass();
 
-        return response()->json([
+        return response()->json([ ## respuesta en json de los datos del usuario autenticado
             'id'     => $instancia->id,
             'name'   => $instancia->name,
             'email'  => $instancia->email,
@@ -68,7 +68,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $request->user()->currentAccessToken()->delete(); ## elimina el token actual del usuario autenticado
 
         return response()->json([
             'message' => 'Sesión cerrada correctamente.',

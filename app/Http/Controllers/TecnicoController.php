@@ -11,9 +11,10 @@ class TecnicoController extends Controller
 {
     public function tomar(Request $request, Incidencia $incidencia): JsonResponse
     {
-        abort_unless($request->user()->tipo === 'tecnico', 403, 'Solo un técnico puede tomar incidencias.');
+        abort_unless($request->user()->tipo === 'tecnico', 403, 'Solo un técnico puede tomar incidencias.'); ## control de acceso: solo un tecnico puede tomar incidencias
 
-        $tomada = Incidencia::query()
+        $tomada = Incidencia::query() ## consulta directa a la base de datos para evitar condiciones de carrera 
+                                        ##(en lugar de modificar el modelo y luego guardar para evitar que dos tecnicos tomen la misma incidencia al mismo tiempo)
             ->whereKey($incidencia->id)
             ->whereNull('tecnico_id')
             ->where('estado', Estado::ABIERTA->value)
@@ -43,7 +44,7 @@ class TecnicoController extends Controller
             'resolucion' => 'required|string',
         ]);
 
-        $actualizada = Incidencia::query()
+        $actualizada = Incidencia::query() ## consulta directa a la base de datos al igual que en tomar() 
             ->whereKey($incidencia->id)
             ->where('tecnico_id', $request->user()->id)
             ->where('estado', Estado::EN_CURSO->value)
@@ -54,8 +55,8 @@ class TecnicoController extends Controller
                 'updated_at' => now(),
             ]);
 
-        if ($actualizada === 0) {
-            $incidencia->refresh();
+        if ($actualizada === 0) { ## valida que el tecnico que intenta resolver la incidencia sea el mismo que la tomo y que la incidencia este en curso.
+            $incidencia->refresh(); ## refresh para obtener el estado actualizado de la incidencia
 
             if ($incidencia->tecnico_id !== $request->user()->id) {
                 abort(403, 'Solo el técnico asignado puede resolver esta incidencia.');

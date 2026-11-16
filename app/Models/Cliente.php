@@ -13,7 +13,7 @@ class Cliente extends User
     protected static function booted(): void
     {
         // filtrar consultas para obtener solo registros de tipo 'cliente'
-        static::addGlobalScope('cliente', function (Builder $builder) {
+        static::addGlobalScope('cliente', function (Builder $builder) { ## scope global para filtrar clientes
             $builder->where('tipo', 'cliente');
         });
 
