@@ -1,3 +1,4 @@
+[![Laravel](https://github.com/Pedromer/incidencias-backend/actions/workflows/laravel.yml/badge.svg)](https://github.com/Pedromer/incidencias-backend/actions/workflows/laravel.yml)
 # Backend - Sistema de Gestion de Incidencias Tecnicas
 
 API REST del sistema de mesa tecnica para la ESET-UNQ. El backend esta desarrollado con Laravel, Sanctum y MariaDB. El frontend se ejecuta en un repositorio independiente y se comunica exclusivamente mediante HTTP y JSON.
